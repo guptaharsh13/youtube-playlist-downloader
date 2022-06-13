@@ -91,7 +91,7 @@ def downloadYoutubePlaylist(link):
         futures = [executor.submit(downloadYoutubeVideo, video, p.title, index)
                    for index, video in enumerate(p.videos)]
         done, not_done = concurrent.futures.wait(
-            fs=futures, return_when=concurrent.futures.ALL_COMPLETED, timeout=5)
+            fs=futures, return_when=concurrent.futures.ALL_COMPLETED)
         if not_done:
             print()
             console.print(
