@@ -1,4 +1,4 @@
-# youtube-playlist-downloader
+# YouTube Playlist Downloader
 
 A command line interface to download youtube playlists in one go. The application employs multi-threading to download numerous videos at once, optimising the download process to the maximum extent.
 
@@ -24,7 +24,8 @@ To start contributing, check out [`CONTRIBUTING.md`](https://github.com/guptahar
 
 ```bash
 python3 -m venv venv
-source venv/bin/active
+source venv/bin/activate
+pip install -r requirements.txt
 python3 main.py
 ```
 
