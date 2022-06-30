@@ -9,6 +9,14 @@ import os
 from datetime import datetime
 
 
+def convertTime(seconds):
+    hours = int(seconds/3600)
+    minutes = int((seconds/60) % 60)
+    seconds -= hours * 3600 + minutes * 60
+    seconds = int(seconds)
+    return (hours, minutes, seconds)
+
+
 def takeInput():
 
     print(figlet_format("Youtube    Playlist Downloader"))
@@ -65,21 +73,12 @@ def downloadYoutubeVideo(video, dir_name, index):
         file.write(f"{video.title}\n")
 
 
-def convertTime(seconds):
-    hours = int(seconds/3600)
-    minutes = int((seconds/60) % 60)
-    seconds -= hours * 3600 + minutes * 60
-    seconds = int(seconds)
-    return (hours, minutes, seconds)
-
-
 def downloadYoutubePlaylist(link):
 
     start_time = time.time()
     console = Console()
     try:
         p = Playlist(link)
-        temp = p.videos[1]
     except:
         print()
         console.print(Markdown(
@@ -111,6 +110,31 @@ def downloadYoutubePlaylist(link):
             print()
 
 
+def downloadSingleYouTubeVideo(link):
+    console = Console()
+    start_time = time.time()
+    try:
+        video = YouTube(link)
+        console.print(
+            Markdown(f"- Downloading : {video.title} | {datetime.now()}"))
+        video.streams.filter(mime_type="video/mp4", progressive=True,
+                             type="video").order_by("resolution")[-1].download("Single YouTube Videos")
+        time_taken = time.time() - start_time
+        hours, minutes, seconds = convertTime(time_taken)
+        print()
+        console.print(Markdown(
+            f"##### Successfully downloaded the YouTube video - {link}"))
+        print()
+        console.print(Markdown(
+            f"###### Time taken - {str(hours) + ' hours ' if hours else ''}{str(minutes) + ' minutes ' if minutes else ''}{seconds} seconds"))
+        print()
+    except:
+        print()
+        console.print(Markdown(
+            "##### Could not connect to the link that you have input. Check your connection or the link that you have input. Thank you."))
+        print()
+
+
 def main():
 
     choice, link = takeInput()
@@ -118,26 +142,7 @@ def main():
     if choice == 1:
         downloadYoutubePlaylist(link=link)
     elif choice == 2:
-        try:
-            start_time = time.time()
-            video = YouTube(link)
-            downloadYoutubeVideo(video=video)
-            time_taken = time.time() - start_time
-            hours, minutes, seconds = convertTime(time_taken)
-            print()
-            console.print(Markdown(
-                f"##### Successfully downloaded all videos from the playlist - {link}"))
-            print()
-            console.print(Markdown(
-                f"###### Time taken - {str(hours) + ' hours ' if hours else ''}{str(minutes) + ' minutes ' if minutes else ''}{seconds} seconds"))
-            print()
-        except:
-            print()
-            console = Console()
-            console.print(Markdown(
-                "##### Could not connect to the link that you have input. Check your connection or the link that you have input. Thank you."))
-            print()
-            quit()
+        downloadSingleYouTubeVideo(link=link)
 
 
 if __name__ == "__main__":
